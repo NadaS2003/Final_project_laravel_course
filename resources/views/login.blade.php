@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | AdminKit</title>
+    <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+<main class="d-flex w-100">
+    <div class="container d-flex flex-column">
+        <div class="row vh-100">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+                <div class="d-table-cell align-middle">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-sm-3">
+                                <form id="loginForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" required />
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="remember" type="checkbox" class="form-check-input" name="remember-me" checked>
+                                        <label class="form-check-label" for="remember">Remember me</label>
+                                    </div>
+                                    <div class="d-grid gap-2 mt-3">
+                                        <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+                                    </div>
+                                    <div id="result" class="mt-3 text-center"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="{{ asset('assets/js/app.js') }}"></script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerText = 'Loading...';
+        resultDiv.className = 'mt-3 text-center text-muted';
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: document.querySelector('[name=email]').value,
+                password: document.querySelector('[name=password]').value
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    resultDiv.className = 'mt-3 text-center text-success';
+                    resultDiv.innerText = 'Login successful! Redirecting...';
+
+                    setTimeout(() => {
+                        window.location.href = "/dashboard";
+                    }, 1000);
+                } else {
+                    resultDiv.className = 'mt-3 text-center text-danger';
+                    resultDiv.innerText = 'Login failed. Check your email or password.';
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                resultDiv.className = 'mt-3 text-center text-danger';
+                resultDiv.innerText = 'An error occurred. Try again later.';
+            });
+    });
+</script>
+</body>
+</html>
