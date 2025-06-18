@@ -17,6 +17,9 @@ COPY . .
 # تثبيت تبعيات Laravel
 RUN composer install --optimize-autoloader --no-dev
 
+# توليد مفاتيح Passport
+RUN php artisan passport:keys
+
 # صلاحيات Laravel
 RUN chmod -R 755 storage
 
