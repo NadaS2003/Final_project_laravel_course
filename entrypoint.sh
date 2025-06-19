@@ -1,19 +1,12 @@
 #!/bin/sh
 
-# تأكد من وجود APP_KEY
-if [ ! -f .env ]; then
-  cp .env.example .env
-fi
-
-# توليد مفتاح التطبيق إذا غير موجود
-php artisan key:generate
-
-# تنفيذ الترحيلات
+php artisan config:clear
+php artisan cache:clear
 php artisan migrate --force
 
-# توليد مفاتيح Passport إذا غير موجودة
+# توليد مفاتيح Passport إن لم تكن موجودة
 if [ ! -f storage/oauth-private.key ]; then
-  echo "Generating Passport keys..."
+  mkdir -p storage/oauth
   php artisan passport:keys
 fi
 
