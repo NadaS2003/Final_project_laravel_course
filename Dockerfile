@@ -14,17 +14,25 @@ WORKDIR /var/www
 # نسخ الملفات
 COPY . .
 
-# تثبيت تبعيات Laravel
-RUN composer install --optimize-autoloader --no-dev
+# نسخ ملف البيئة
+RUN cp .env.example .env
 
-# توليد مفاتيح Passport
-RUN php artisan passport:keys
+# توليد مفتاح التطبيق (مطلوب قبل passport)
+RUN composer install --no-dev --optimize-autoloader
+RUN php artisan key:generate
 
-# صلاحيات Laravel
+# صلاحيات التخزين
 RUN chmod -R 755 storage
 
-# فتح البورت
+# فتح المنفذ
 EXPOSE 8000
 
-# أمر التشغيل
+# تشغيل Laravel
 CMD php artisan serve --host=0.0.0.0 --port=8000
+
+# نسخ ملف entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# أمر التشغيل الجديد
+CMD ["/entrypoint.sh"]
