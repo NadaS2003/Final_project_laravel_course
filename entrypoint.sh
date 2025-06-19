@@ -4,10 +4,10 @@ php artisan config:clear
 php artisan cache:clear
 php artisan migrate --force
 
-# توليد مفاتيح Passport إن لم تكن موجودة
-if [ ! -f storage/oauth-private.key ]; then
-  mkdir -p storage/oauth
-  php artisan passport:keys
+# تأكد من وجود مفاتيح Passport في /etc/secrets
+if [ ! -f /etc/secrets/oauth-private.key ] || [ ! -f /etc/secrets/oauth-public.key ]; then
+  echo "Passport keys not found in /etc/secrets. Please upload them as Secret Files."
+  exit 1
 fi
 
 # تشغيل السيرفر
