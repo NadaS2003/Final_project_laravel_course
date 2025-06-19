@@ -19,7 +19,7 @@ return new class extends Migration
 
 
             $table->foreign('volunteer_id')->references('id')->on('volunteers')->onDelete('cascade');
-            $table->foreign('place_id')->references('id')->on('place')->onDelete('cascade');
+            $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->timestamps();
         });
