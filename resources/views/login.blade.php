@@ -57,7 +57,7 @@
         resultDiv.innerText = 'Loading...';
         resultDiv.className = 'mt-3 text-center text-muted';
 
-        fetch('/api/login', {
+        fetch('http://localhost:8000/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
